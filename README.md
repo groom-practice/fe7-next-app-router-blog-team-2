@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 토이 블로그 (CRUD)
 
-## Getting Started
+간단한 블로그 토이 프로젝트입니다. 화면에서 글 목록을 보고(검색 가능), 글을 작성/수정/삭제할 수 있어요.
 
-First, run the development server:
+## 화면
+
+### 목록(/): 글 목록 + 검색(제목/내용)
+
+gif or png
+
+- `/api/posts`로 글 목록을 불러옵니다.
+- 검색어를 입력하면 제목/내용 기준으로 실시간 필터링됩니다.
+- 글을 클릭하면 상세 화면(`/posts/[id]`)으로 이동합니다.
+
+### 상세(/posts/[id]): 글 확인 + 수정/삭제
+
+gif or png
+
+- 글 제목/내용을 보여줍니다.
+- **수정** 클릭 시 수정 화면(`/edit/[id]`)으로 이동합니다.
+- **삭제** 클릭 시 글을 삭제하고 목록(`/`)으로 이동합니다.
+
+### 작성(/write): 글 작성
+
+gif or png
+
+- 제목/내용을 입력하고 **작성 완료**를 누르면 글이 생성됩니다.
+- 입력값이 공백이면 작성이 막힙니다.
+- 작성 후 목록(`/`)으로 이동합니다.
+
+### 수정(/edit/[id]): 글 수정
+
+gif or png
+
+- 기존 글을 불러와 제목/내용을 수정합니다.
+- 입력값이 공백이면 저장이 막힙니다.
+- 저장 후 상세(`/posts/[id]`)로 이동합니다.
+
+## 사용 흐름
+
+1. `/`에서 글 목록을 보고 검색합니다.
+2. 글을 클릭하면 `/posts/[id]`에서 상세를 봅니다.
+3. 새 글은 `/write`에서 작성합니다.
+4. 수정은 상세 화면에서 **수정** → `/edit/[id]`에서 저장합니다.
+5. 삭제는 상세 화면에서 **삭제**를 누르면 목록으로 돌아갑니다.
+
+## 실행
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+브라우저에서 `http://localhost:3000` 로 접속합니다.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 데이터 저장 방식(주의)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+이 프로젝트는 `data/data.js`의 **메모리 배열**을 사용합니다.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 서버를 재시작하면 데이터가 초기화됩니다.
