@@ -5,7 +5,8 @@ import { useState, useEffect, useMemo } from "react";
 export default function Home() {
   const [search, setSearch] = useState("");
   const [posts, setPosts] = useState([]);
-  // 블로그 글 목록 조회
+
+  // 블로그 글 목록 조회 / 컴포넌트가 렌더링 된 후 실행됨
   useEffect(() => {
     fetch("/api/posts")
       .then((res) => res.json())
@@ -13,17 +14,18 @@ export default function Home() {
       .catch(console.error);
   }, []);
 
-  // 검색어 필터링
+  // 실시간 검색어 필터링
+  // memo로 성능 최적화 / 의존성 배열(posts, search)가 변경될 때만 실행
   const filteredPosts = useMemo(() => {
     if (!search.trim()) return posts;
     const term = search.trim().toLowerCase();
     return posts.filter(
       (post) =>
+        // 제목 또는 내용에 검색어가 포함되어 있는지 확인
         (post.title && post.title.toLowerCase().includes(term)) ||
-        (post.content && post.content.toLowerCase().includes(term)) ||
-        (post.category && post.category.toLowerCase().includes(term)) ||
-        (post.excerpt && post.excerpt.toLowerCase().includes(term))
+        (post.content && post.content.toLowerCase().includes(term))
     );
+    // 검색어가 변경될 때만 실행
   }, [posts, search]);
 
   // 블로그 글 목록 출력  
