@@ -18,17 +18,18 @@ export default function Home() {
 
   // 실시간 검색어 필터링
   // memo로 성능 최적화 / 의존성 배열(posts, search)가 변경될 때만 실행
+  // + 제목, 내용, 카테고리에 검색어 포함 여부 확인 (카테고리 클릭 시 해당 키워드 자동 검색)
   const filteredPosts = useMemo(() => {
     if (!search.trim()) return posts;
     const term = search.trim().toLowerCase();
     return posts.filter(
       (post) =>
-        // 제목 또는 내용에 검색어가 포함되어 있는지 확인
         (post.title && post.title.toLowerCase().includes(term)) ||
-        (post.content && post.content.toLowerCase().includes(term))
+        (post.content && post.content.toLowerCase().includes(term)) ||
+        (post.category && post.category.toLowerCase().includes(term))
     );
-    // 검색어가 변경될 때만 실행
   }, [posts, search]);
+
 
   // 블로그 글 목록 출력  
   return (
@@ -37,6 +38,28 @@ export default function Home() {
         <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
           블로그 글 목록
         </h1>
+
+        {/* 카테고리 필터 : 클릭 시 해당 키워드로 검색창에 자동 입력 */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          <span className="text-sm text-gray-600 self-center mr-2">
+            카테고리:
+          </span>
+          {["All", "React", "Next.js", "JavaScript"].map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => setSearch(cat === "All" ? "" : cat)}
+              className={`px-4 py-2 rounded-lg font-medium transition ${
+                (cat === "All" && !search) || search === cat
+                  ? "bg-blue-600 text-white"
+                  : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
         {/* 검색창 */}
         <div className="flex gap-2 mb-6">
           <input
