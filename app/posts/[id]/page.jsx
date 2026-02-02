@@ -12,7 +12,7 @@ export default function PostDetailPage() {
   useEffect(() => {
     fetch(`/api/posts/${params.id}`)
       .then((res) => {
-        if (res.ststus === 404) router.push("/not-found");
+        if (res.status === 404) router.push("/not-found");
         return res.json();
       })
       .then(setPost);
