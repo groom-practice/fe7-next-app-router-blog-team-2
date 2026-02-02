@@ -9,7 +9,7 @@ export default function WritePage() {
   const [content, setContent] = useState("")
 
   const handleSubmit = async () => {
-    await fetch("/api/posts", {
+    const res = await fetch("/api/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -18,6 +18,11 @@ export default function WritePage() {
         category: "React",
       }),
     })
+
+    if (!res.ok) {
+      alert("글 작성에 실패했습니다.")
+      throw new Error("글 작성에 실패했습니다.")
+    }
 
     router.push("/")
   }

@@ -19,11 +19,16 @@ export default function EditPage() {
   }, [id])
 
   const handleUpdate = async () => {
-    await fetch(`/api/posts/${id}`, {
+    const res = await fetch(`/api/posts/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, content }),
     })
+
+    if (!res.ok) {
+      alert("글 수정에 실패했습니다.")
+      throw new Error("수정에 실패했습니다.")
+    }
 
     router.push(`/posts/${id}`)
   }
