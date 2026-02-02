@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 
 export default function Home() {
   const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -16,19 +17,26 @@ export default function Home() {
       .finally(() => setIsLoading(false));
   }, []);
 
-  // 실시간 검색어 필터링
-  // memo로 성능 최적화 / 의존성 배열(posts, search)가 변경될 때만 실행
-  // + 제목, 내용, 카테고리에 검색어 포함 여부 확인 (카테고리 클릭 시 해당 키워드 자동 검색)
+
+  // 필터링 : 카테고리 선택 → 검색어 적용 (카테고리는 검색창에 안 넣고 별도 필터)
   const filteredPosts = useMemo(() => {
-    if (!search.trim()) return posts;
+
+    // 카테고리 필터 (클릭 시 해당 카테고리만 표시)
+    const byCategory =
+      category === "All"
+        ? posts
+        : posts.filter((post) => post.category === category);
+
+    // 검색어 필터 (검색창 입력값으로 필터)
+    if (!search.trim()) return byCategory;
     const term = search.trim().toLowerCase();
-    return posts.filter(
+    return byCategory.filter(
       (post) =>
         (post.title && post.title.toLowerCase().includes(term)) ||
         (post.content && post.content.toLowerCase().includes(term)) ||
         (post.category && post.category.toLowerCase().includes(term))
     );
-  }, [posts, search]);
+  }, [posts, category, search]);
 
 
   // 블로그 글 목록 출력  
@@ -39,7 +47,7 @@ export default function Home() {
           블로그 글 목록
         </h1>
 
-        {/* 카테고리 필터 : 클릭 시 해당 키워드로 검색창에 자동 입력 */}
+        {/* 카테고리 필터: 클릭 시 해당 카테고리로만 필터 (검색창과 별도) */}
         <div className="flex flex-wrap gap-2 mb-6">
           <span className="text-sm text-gray-600 self-center mr-2">
             카테고리:
@@ -48,9 +56,9 @@ export default function Home() {
             <button
               key={cat}
               type="button"
-              onClick={() => setSearch(cat === "All" ? "" : cat)}
+              onClick={() => setCategory(cat)}
               className={`px-4 py-2 rounded-lg font-medium transition ${
-                (cat === "All" && !search) || search === cat
+                category === cat
                   ? "bg-blue-600 text-white"
                   : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
               }`}
