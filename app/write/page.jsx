@@ -43,6 +43,7 @@ export default function WritePage() {
         onChange={(e) => setContent(e.target.value)}
       />
       <button
+        disabled={!title.trim() || !content.trim()}
         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         onClick={handleSubmit}>
         작성 완료

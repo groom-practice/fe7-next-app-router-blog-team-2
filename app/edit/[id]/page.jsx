@@ -49,6 +49,7 @@ export default function EditPage() {
         onChange={(e) => setContent(e.target.value)}
       />
       <button
+        disabled={!title.trim() || !content.trim()}
         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         onClick={handleUpdate}>
         수정 완료
