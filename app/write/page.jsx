@@ -36,7 +36,7 @@ export default function WritePage() {
   }
 
   return (
-    <div>
+    <div className="p-8">
       <h1 className="text-2xl font-bold mb-5">글 작성</h1>
       <input
         className="border p-5 w-full mb-5 focus:border-blue-500 focus:outline-none"
