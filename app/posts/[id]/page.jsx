@@ -20,8 +20,8 @@ export default function PostDetailPage() {
 
   if (!post) return <p>로딩 중입니다...</p>;
 
-  const handleDelete = () => {
-    fetch(`/api/posts/${params.id}`, {
+  const handleDelete = async () => {
+    await fetch(`/api/posts/${params.id}`, {
       method: "DELETE",
     });
     router.push("/");
