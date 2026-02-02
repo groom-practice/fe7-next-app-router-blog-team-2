@@ -5,13 +5,15 @@ import { useState, useEffect, useMemo } from "react";
 export default function Home() {
   const [search, setSearch] = useState("");
   const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // 블로그 글 목록 조회 / 컴포넌트가 렌더링 된 후 실행됨
   useEffect(() => {
     fetch("/api/posts")
       .then((res) => res.json())
       .then(setPosts)
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
   }, []);
 
   // 실시간 검색어 필터링
@@ -36,32 +38,23 @@ export default function Home() {
           블로그 글 목록
         </h1>
         {/* 검색창 */}
-        <div className="flex gap-2 mb-6 ">
+        <div className="flex gap-2 mb-6">
           <input
             type="text"
             placeholder="검색어를 입력하세요."
-            className="flex-1 p-2 border border-gray-300 rounded-md color-black text-black"
+            className="w-full p-2 border border-gray-300 rounded-md text-black"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") setSearch(e.target.value);
-            }}
           />
-
-          {/* 검색 버튼 */}
-          <button
-            type="button"
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-            aria-label="검색"
-            onClick={() => setSearch(search.trim())}
-          >
-            검색
-          </button>
         </div>
 
         {/* 블로그 글 목록 출력 */}
         <ul className="grid gap-6">
-          {filteredPosts.length > 0 ? (
+          {isLoading ? (
+            <li className="text-center py-12 text-gray-500">
+              글을 불러오는 중...
+            </li>
+          ) : filteredPosts.length > 0 ? (
             filteredPosts.map((post) => (
               <li
                 key={post.id}
@@ -83,9 +76,8 @@ export default function Home() {
               </li>
             ))
           ) : (
-            // 검색 결과가 없을 때
             <li className="text-center py-12 text-gray-500">
-              {posts.length === 0 ? "글을 불러오는 중..." : "검색 결과가 없습니다."}
+              검색 결과가 없습니다.
             </li>
           )}
         </ul>
