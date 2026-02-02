@@ -19,10 +19,18 @@ export default function EditPage() {
   }, [id])
 
   const handleUpdate = async () => {
+    const trimmedTitle = title.trim()
+    const trimmedContent = content.trim()
+
+    if (!trimmedTitle || !trimmedContent) {
+      alert("제목과 내용을 공백 없이 입력해주세요.")
+      return
+    }
+
     const res = await fetch(`/api/posts/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, content }),
+      body: JSON.stringify({ title: trimmedTitle, content: trimmedContent }),
     })
 
     if (!res.ok) {
@@ -49,8 +57,8 @@ export default function EditPage() {
         onChange={(e) => setContent(e.target.value)}
       />
       <button
-        disabled={!title.trim() || !content.trim()}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        disabled={!title?.trim() || !content?.trim()}
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
         onClick={handleUpdate}>
         수정 완료
       </button>

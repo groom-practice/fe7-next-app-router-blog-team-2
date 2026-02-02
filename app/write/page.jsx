@@ -9,12 +9,20 @@ export default function WritePage() {
   const [content, setContent] = useState("")
 
   const handleSubmit = async () => {
+    const trimmedTitle = title.trim()
+    const trimmedContent = content.trim()
+
+    if (!trimmedTitle || !trimmedContent) {
+      alert("제목과 내용을 공백 없이 입력해주세요.")
+      return
+    }
+
     const res = await fetch("/api/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        title,
-        content,
+        title: trimmedTitle,
+        content: trimmedContent,
         category: "React",
       }),
     })
@@ -43,8 +51,8 @@ export default function WritePage() {
         onChange={(e) => setContent(e.target.value)}
       />
       <button
-        disabled={!title.trim() || !content.trim()}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        disabled={!title?.trim() || !content?.trim()}
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
         onClick={handleSubmit}>
         작성 완료
       </button>
